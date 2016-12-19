@@ -9,5 +9,5 @@ workflows:
         run_if: true
         inputs:
         - github_token: ""
-        - github_repo: "beyondftw/beam2"
+        - github_repo: "pupca/bitrise-git-release"
         - release_name: "$UNIX_EPOCH_TIME"        

@@ -6,7 +6,7 @@ github_repo  = ENV['github_repo']
 release_name = "#{ENV['BITRISE_TRIGGERED_WORKFLOW_TITLE']}_#{ENV['release_name']}"
 
 release_desc = ""
-commit = `git rev-parse HEAD`
+commit = `git rev-parse HEAD | xargs echo -n`
 
 uri = URI("https://api.github.com")
 http = Net::HTTP.new(uri.host, uri.port)
@@ -25,8 +25,13 @@ request.body = {
   "prerelease"       => false,
 }.to_json
 
-# response = http.request(request)
-# abort response.body unless response.is_a?(Net::HTTPSuccess)
-
-# release = JSON.parse(response.body)
+puts github_repo
 puts request.body
+
+response = http.request(request)
+abort response.body unless response.is_a?(Net::HTTPSuccess)
+
+release = JSON.parse(response.body)
+puts release["html_url"]
+
+`envman add --key RELEASE_URL --value #{release["html_url"]}`
